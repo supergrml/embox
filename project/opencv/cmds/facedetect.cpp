@@ -208,9 +208,9 @@ static void imdrawfb(Mat& img) {
         for (int x = 0; x < w; x += 3) {
             unsigned rgb888    =
                 0xFF000000 |
-                unsigned(row[x]) |
+                unsigned(row[x + 2]) |
                 (unsigned(row[x + 1]) << 8) |
-                (unsigned(row[x + 2]) << 16);
+                (unsigned(row[x]) << 16);
 
             ((uint32_t *) fbi->screen_base)[fbi->var.xres * y + x / 3] = rgb888;
         }
