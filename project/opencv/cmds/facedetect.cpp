@@ -24,7 +24,7 @@ static void help(const char** argv)
             "   [filename|camera_index]\n\n"
             "example:\n"
         <<  argv[0]
-        <<  " --cascade=\"data/haarcascades/haarcascade_frontalface_alt.xml\" --nested-cascade=\"data/haarcascades/haarcascade_eye_tree_eyeglasses.xml\" --scale=1.3\n\n"
+        <<  " --cascade=\"facedetect_data/haarcascades/haarcascade_frontalface_alt.xml\" --nested-cascade=\"facedetect_data/haarcascades/haarcascade_eye_tree_eyeglasses.xml\" --scale=1.3\n\n"
             "During execution:\n\tHit any key to quit.\n"
             "\tUsing OpenCV version " << CV_VERSION << "\n" << endl;
 }
@@ -48,8 +48,8 @@ int main( int argc, const char** argv )
 
     cv::CommandLineParser parser(argc, argv,
         "{help h||}"
-        "{cascade|data/haarcascades/haarcascade_frontalface_alt.xml|}"
-        "{nested-cascade|data/haarcascades/haarcascade_eye_tree_eyeglasses.xml|}"
+        "{cascade|facedetect_data/haarcascades/haarcascade_frontalface_alt.xml|}"
+        "{nested-cascade|facedetect_data/haarcascades/haarcascade_eye_tree_eyeglasses.xml|}"
         "{scale|1|}{try-flip||}{@filename||}"
     );
     if (parser.has("help"))
