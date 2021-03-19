@@ -3,6 +3,9 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 #include <iostream>
+#include <unistd.h>
+
+#include <drivers/video/fb.h>
 
 using namespace std;
 using namespace cv;
@@ -63,7 +66,7 @@ int main( int argc, const char** argv )
     tryflip = parser.has("try-flip");
     inputName = parser.get<string>("@filename");
 
-	fileExt = inputName.substr(inputName.find_last_of(".") + 1);
+    fileExt = inputName.substr(inputName.find_last_of(".") + 1);
 
     if (!parser.check())
     {
@@ -129,9 +132,13 @@ int main( int argc, const char** argv )
             Mat frame1 = frame.clone();
             detectAndDraw( frame1, cascade, nestedCascade, scale, tryflip );
 
+#if 0
             char c = (char)waitKey(1000);
             if( c == 27 || c == 'q' || c == 'Q' )
                 break;
+#else
+            sleep(1);
+#endif
         }
     }
     else
@@ -140,7 +147,7 @@ int main( int argc, const char** argv )
         if( !image.empty() )
         {
             detectAndDraw( image, cascade, nestedCascade, scale, tryflip );
-            waitKey(0);
+            //waitKey(0);
         }
         else if( !inputName.empty() )
         {
@@ -161,9 +168,13 @@ int main( int argc, const char** argv )
                     if( !image.empty() )
                     {
                         detectAndDraw( image, cascade, nestedCascade, scale, tryflip );
+#if 0
                         char c = (char)waitKey(0);
                         if( c == 27 || c == 'q' || c == 'Q' )
                             break;
+#else
+                        sleep(1);
+#endif
                     }
                     else
                     {
@@ -176,6 +187,33 @@ int main( int argc, const char** argv )
     }
 
     return 0;
+}
+
+static void imdrawfb(Mat& img) {
+    struct fb_info *fbi;
+    int w, h;
+
+    fbi = fb_lookup(0);
+    if (!fbi) {
+        cerr << "fb0 not found" << endl;
+        return;
+    }
+
+    h = min((int) fbi->var.yres, img.rows);
+    w = min((int) (fbi->var.bits_per_pixel * fbi->var.xres) / 8, 3 * img.cols);
+
+    for (int y = 0; y < h; y++) {
+        const uchar *row = &img.at<uchar>(y, 0);
+        for (int x = 0; x < w; x += 3) {
+            unsigned rgb888    =
+                0xFF000000 |
+                unsigned(row[x]) |
+                (unsigned(row[x + 1]) << 8) |
+                (unsigned(row[x + 2]) << 16);
+
+            ((uint32_t *) fbi->screen_base)[fbi->var.xres * y + x / 3] = rgb888;
+        }
+    }
 }
 
 void detectAndDraw( Mat& img, CascadeClassifier& cascade,
@@ -265,5 +303,7 @@ void detectAndDraw( Mat& img, CascadeClassifier& cascade,
             circle( img, center, radius, color, 3, 8, 0 );
         }
     }
-    imshow( "result", img );
+
+    //imshow( "result", img );
+    imdrawfb(img);
 }
