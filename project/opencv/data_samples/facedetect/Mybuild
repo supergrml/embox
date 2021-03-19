@@ -1,0 +1,8 @@
+package platform.opencv.data_samples.facedetect
+
+module data {
+	@InitFS(target_dir="facedetect_data")
+	source "haarcascades",
+	       "seq",
+	       "lena.png"
+}
