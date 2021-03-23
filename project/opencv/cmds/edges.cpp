@@ -11,6 +11,7 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <stdio.h>
+#include <sys/time.h>
 
 #include <drivers/video/fb.h>
 
@@ -60,6 +61,7 @@ static void imdrawfb(Mat& img) {
 
 int main(int argc, const char** argv) {
 	int edgeThresh = 2;
+	struct timeval t_start, t_stop, t_res;
 	Mat image, gray, edge, cedge;
 
 	CommandLineParser parser(argc, argv, keys);
@@ -80,8 +82,16 @@ int main(int argc, const char** argv) {
 	cedge.create(image.size(), image.type());
 	cvtColor(image, gray, COLOR_BGR2GRAY);
 
+	gettimeofday(&t_start, NULL);
+
 	blur(gray, edge, Size(3,3));
 	Canny(edge, edge, edgeThresh, edgeThresh*3, 3);
+
+	gettimeofday(&t_stop, NULL);
+	timersub(&t_stop, &t_start, &t_res);
+
+	printf("Calculation time: %d s %d ms\n", t_res.tv_sec, t_res.tv_usec / 1000);
+
 	cedge = Scalar::all(0);
 
 	image.copyTo(cedge, edge);
