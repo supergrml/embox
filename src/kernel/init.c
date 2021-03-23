@@ -42,14 +42,14 @@ void kernel_start(void) {
 static void kernel_init(void) {
 	arch_init();
 
-	ipl_init();
-
 	diag_init();
 
 	printk("\n");
 
 	irqctrl_init();
 	printk("Interrupt controller: %s\n", irqctrl_get()->name);
+
+	ipl_init();
 }
 
 /**
