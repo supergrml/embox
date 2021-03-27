@@ -263,7 +263,7 @@ void detectAndDraw( Mat& img, CascadeClassifier& cascade,
         }
     }
     t = (double)getTickCount() - t;
-    printf( "detection time = %g ms\n", t*1000/getTickFrequency());
+    printf( "detection time = %d ms\n", (int) (t*1000/getTickFrequency()));
     for ( size_t i = 0; i < faces.size(); i++ )
     {
         Rect r = faces[i];
