@@ -4,5 +4,6 @@ module data {
 	@InitFS(target_dir="facedetect_data")
 	source "haarcascades",
 	       "seq",
-	       "lena.png"
+	       "lena.png",
+	       "lena_256x256.png"
 }
