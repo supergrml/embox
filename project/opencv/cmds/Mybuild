@@ -36,21 +36,6 @@ module version {
 	source "version.cpp"
 
 	depends third_party.lib.opencv.all
-<<<<<<< HEAD
-}
-
-@AutoCmd
-@Cmd(name = "facedetect",
-	help = "Face and eyes detection")
-@BuildDepends(third_party.lib.opencv)
-@Build(stage=2)
-module facedetect {
-	source "facedetect.cpp"
-
-	depends embox.driver.video.fb
-	depends third_party.lib.opencv
-=======
->>>>>>> ae4cc689b... opencv Mybuild
 }
 
 @LinkerSection(text="facedetect_text",rodata="facedetect_rodata",data="facedetect_data",bss="facedetect_bss",arm_exidx="facedetect_arm_exidx",arm_extab="facedetect_arm_extab")
@@ -61,6 +46,19 @@ module facedetect {
 @Build(stage=2)
 module facedetect {
 	source "facedetect.cpp"
+
+	depends embox.driver.video.fb
+	depends third_party.lib.opencv.all
+}
+
+@LinkerSection(text="squares_text",rodata="squares_rodata",data="squares_data",bss="squares_bss",arm_exidx="squares_arm_exidx",arm_extab="squares_arm_extab")
+@AutoCmd
+@Cmd(name = "squares",
+	help = "Squares detection")
+@BuildDepends(third_party.lib.opencv.all)
+@Build(stage=2)
+module squares {
+	source "squares.cpp"
 
 	depends embox.driver.video.fb
 	depends third_party.lib.opencv.all
