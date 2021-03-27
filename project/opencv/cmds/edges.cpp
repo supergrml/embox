@@ -90,7 +90,7 @@ int main(int argc, const char** argv) {
 	gettimeofday(&t_stop, NULL);
 	timersub(&t_stop, &t_start, &t_res);
 
-	printf("Calculation time: %d s %d ms\n", t_res.tv_sec, t_res.tv_usec / 1000);
+	printf("Calculation time: %d s %d ms\n", (int) t_res.tv_sec, (int) t_res.tv_usec / 1000);
 
 	cedge = Scalar::all(0);
 
