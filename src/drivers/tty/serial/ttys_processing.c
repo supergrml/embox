@@ -63,9 +63,15 @@ static int uart_rx_action(struct lthread *self) {
 		
 		if (uart_state_test(uart, UART_STATE_RX_ACTIVE)) {
 			uart_state_clear(uart, UART_STATE_RX_ACTIVE);
-			while(ring_buff_dequeue(&uart->uart_rx_ring, &ch, 1)) {
-				tty_rx_locked(uart->tty, ch, 0);
+
+			irq_lock();
+			{
+				while (ring_buff_dequeue(&uart->uart_rx_ring, &ch, 1)) {
+					tty_rx_locked(uart->tty, ch, 0);
+				}
 			}
+			irq_unlock();
+
 			if (uart->uart_ops->uart_irq_en) {
 				uart->uart_ops->uart_irq_en(uart, &uart->params);
 			}
